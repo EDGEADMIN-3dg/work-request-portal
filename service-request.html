@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Request — Edge Controls</title>
+  <meta name="description" content="Submit a service or repair request to Edge Controls for existing field sites.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <svg class="header-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#2c6faa"/>
+          <path d="M10 14h20M10 20h14M10 26h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="header-title">Edge Controls</div>
+          <div class="header-subtitle">Industrial Automation &amp; Control Systems</div>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">← Back to Portal</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Form -->
+  <div class="form-container">
+    <div style="margin-bottom: var(--space-lg);">
+      <a href="index.html" style="font-size: 0.9rem; color: var(--ec-gray-400);">← Back to request type selection</a>
+    </div>
+
+    <div class="form-card" id="service-form">
+      <h1 style="font-family: var(--font-heading); font-size: 1.6rem; font-weight: 700; color: var(--ec-navy); margin-bottom: var(--space-xs);">Service &amp; Repair Request</h1>
+      <p style="color: var(--ec-gray-600); margin-bottom: var(--space-2xl); font-size: 0.95rem;">Tell us what needs attention. We'll follow up to confirm scope and schedule.</p>
+
+      <!-- Contact Information -->
+      <div class="form-section-title">Your Information</div>
+
+      <div class="form-group">
+        <label for="company">Company Name *</label>
+        <select id="company" required>
+          <option value="">Select your company...</option>
+          <!-- Populated dynamically from Field Sites Master -->
+          <option value="__new__">+ My company isn't listed</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="new-company-group" style="display: none;">
+        <label for="new-company">Company Name *</label>
+        <input type="text" id="new-company" placeholder="Enter your company name">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="contact-name">Contact Name *</label>
+          <input type="text" id="contact-name" required placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label for="contact-phone">Phone *</label>
+          <input type="tel" id="contact-phone" required placeholder="(432) 555-1234" oninput="formatPhone(this)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contact-email">Email *</label>
+        <input type="email" id="contact-email" required placeholder="you@company.com">
+      </div>
+
+      <!-- Site & Problem -->
+      <div class="form-section-title">Site &amp; Problem</div>
+
+      <div class="form-group">
+        <label for="site">Site Location *</label>
+        <select id="site" required>
+          <option value="">Select a site...</option>
+          <!-- Populated dynamically based on selected company -->
+          <option value="__new__">+ Site isn't listed</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="new-site-group" style="display: none;">
+        <label for="new-site">Site Name / Location *</label>
+        <input type="text" id="new-site" placeholder="Describe the site location">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Describe the Problem *</label>
+        <div class="hint">What's happening? What equipment is affected? When did it start? Any error codes or alarms?</div>
+        <textarea id="description" required placeholder="Example: The main pump PLC faulted this morning around 6 AM. HMI shows a communication error on slot 3. Pump is currently shut down."></textarea>
+      </div>
+
+      <!-- Urgency -->
+      <div class="form-group">
+        <label>Urgency Level *</label>
+        <div class="urgency-options">
+          <label class="urgency-option">
+            <input type="radio" name="urgency" value="routine" required>
+            <div>
+              <div class="urgency-label">Routine</div>
+              <div class="urgency-desc">Schedule when available. No production impact.</div>
+            </div>
+          </label>
+          <label class="urgency-option">
+            <input type="radio" name="urgency" value="urgent">
+            <div>
+              <div class="urgency-label">Urgent</div>
+              <div class="urgency-desc">Needs attention within 24–48 hours. Partial production impact or degraded operation.</div>
+            </div>
+          </label>
+          <label class="urgency-option emergency">
+            <input type="radio" name="urgency" value="emergency">
+            <div>
+              <div class="urgency-label" style="color: var(--ec-danger);">⚠ Emergency</div>
+              <div class="urgency-desc">Production is stopped, there is a safety hazard, or there is an environmental risk. <strong>If it can wait until tomorrow, it's not an emergency.</strong></div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- File Upload -->
+      <div class="form-section-title">Photos &amp; Documents (Optional)</div>
+
+      <div class="form-group">
+        <label for="file-upload">Upload Files</label>
+        <div class="hint">Photos of the problem, error screenshots, relevant documents. Max 10MB per file.</div>
+        <input type="file" id="file-upload" multiple accept="image/*,.pdf,.doc,.docx,.xlsx,.xls,.csv,.txt">
+        <div id="file-list" style="margin-top: var(--space-sm); font-size: 0.85rem; color: var(--ec-gray-600);"></div>
+      </div>
+
+      <!-- Submit -->
+      <div id="form-status"></div>
+
+      <button type="button" class="btn btn-primary" id="submit-btn" onclick="handleSubmit()" style="margin-top: var(--space-lg);">
+        Submit Service Request
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Edge Controls. Industrial Automation &amp; Control Systems — Permian Basin, Texas.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ---- Company/Site dropdown logic ----
+    const companySelect = document.getElementById('company');
+    const siteSelect = document.getElementById('site');
+
+    companySelect.addEventListener('change', function() {
+      document.getElementById('new-company-group').style.display = 
+        this.value === '__new__' ? 'block' : 'none';
+      
+      // TODO: Filter sites by selected company
+      // This will call the backend to get sites for the selected customer
+    });
+
+    siteSelect.addEventListener('change', function() {
+      document.getElementById('new-site-group').style.display = 
+        this.value === '__new__' ? 'block' : 'none';
+    });
+
+    // ---- File upload display ----
+    document.getElementById('file-upload').addEventListener('change', function() {
+      const list = document.getElementById('file-list');
+      if (this.files.length > 0) {
+        const names = Array.from(this.files).map(f => 
+          `📎 ${f.name} (${(f.size / 1024).toFixed(0)} KB)`
+        );
+        list.innerHTML = names.join('<br>');
+      } else {
+        list.innerHTML = '';
+      }
+    });
+
+    // ---- Form submission ----
+    async function handleSubmit() {
+      // Validate
+      if (!validateRequired('service-form')) return;
+
+      // Check urgency selected
+      const urgency = document.querySelector('input[name="urgency"]:checked');
+      if (!urgency) {
+        showStatus('form-status', 'Please select an urgency level.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      setLoading(btn, true);
+
+      try {
+        // Gather form data
+        const companyValue = companySelect.value;
+        const siteValue = siteSelect.value;
+
+        const data = {
+          type: 'service',
+          company: companyValue === '__new__' 
+            ? document.getElementById('new-company').value 
+            : companyValue,
+          contactName: document.getElementById('contact-name').value,
+          contactPhone: document.getElementById('contact-phone').value,
+          contactEmail: document.getElementById('contact-email').value,
+          site: siteValue === '__new__' 
+            ? document.getElementById('new-site').value 
+            : siteValue,
+          description: document.getElementById('description').value,
+          urgency: urgency.value,
+          timestamp: new Date().toISOString()
+        };
+
+        // Prepare files if any
+        const fileInput = document.getElementById('file-upload');
+        if (fileInput.files.length > 0) {
+          data.files = await prepareFiles(fileInput.files);
+        }
+
+        // Submit
+        const result = await submitRequest(data);
+
+        if (result.success) {
+          // Redirect to confirmation page
+          // For now, show inline confirmation
+          document.getElementById('service-form').innerHTML = `
+            <div style="text-align: center; padding: var(--space-2xl) 0;">
+              <div style="font-size: 3rem; margin-bottom: var(--space-md);">✓</div>
+              <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--ec-navy); margin-bottom: var(--space-md);">Request Submitted</h2>
+              <p style="color: var(--ec-gray-600); margin-bottom: var(--space-lg);">
+                Your service request has been received. Our team has been notified and will follow up shortly.
+              </p>
+              <p style="color: var(--ec-gray-400); font-size: 0.9rem; margin-bottom: var(--space-xl);">
+                A confirmation email has been sent to <strong>${data.contactEmail}</strong>.
+              </p>
+              <a href="index.html" class="btn btn-primary" style="display: inline-flex; width: auto;">
+                Submit Another Request
+              </a>
+            </div>
+          `;
+        } else {
+          showStatus('form-status', 'Something went wrong. Please try again or call us directly.', 'error');
+        }
+      } catch (error) {
+        showStatus('form-status', 'Something went wrong. Please try again or call us directly.', 'error');
+        console.error(error);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+
+    // ---- Load customers/sites from backend ----
+    // TODO: On page load, fetch customer list and site list from Apps Script
+    // For now, these are placeholder dropdowns
+    // loadCustomers() and loadSites() will be implemented when backend is ready
+  </script>
+</body>
+</html>

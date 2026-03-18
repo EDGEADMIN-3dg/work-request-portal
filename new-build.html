@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Build Request — Edge Controls</title>
+  <meta name="description" content="Request a new automation system, control panel, PLC, SCADA, or instrumentation project from Edge Controls.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Mode selection cards */
+    .mode-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+    .mode-card {
+      background: var(--ec-white);
+      border: 2px solid var(--ec-gray-200);
+      border-radius: var(--radius-md);
+      padding: var(--space-xl);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      text-align: center;
+    }
+    .mode-card:hover {
+      border-color: var(--ec-accent);
+      transform: translateY(-2px);
+    }
+    .mode-card.active {
+      border-color: var(--ec-accent);
+      background: rgba(232, 118, 43, 0.04);
+    }
+    .mode-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--ec-navy);
+      margin-bottom: var(--space-sm);
+    }
+    .mode-card p {
+      font-size: 0.85rem;
+      color: var(--ec-gray-600);
+      line-height: 1.5;
+    }
+    .mode-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Guided walkthrough styles */
+    .guided-container {
+      text-align: center;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .guided-question {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--ec-navy);
+      margin-bottom: var(--space-xl);
+      max-width: 500px;
+    }
+    .guided-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      width: 100%;
+      max-width: 400px;
+    }
+    .guided-option {
+      padding: var(--space-md) var(--space-lg);
+      border: 1px solid var(--ec-gray-200);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background: var(--ec-white);
+      text-align: left;
+    }
+    .guided-option:hover {
+      border-color: var(--ec-accent);
+      background: rgba(232, 118, 43, 0.04);
+    }
+    .guided-option.selected {
+      border-color: var(--ec-accent);
+      background: rgba(232, 118, 43, 0.08);
+      font-weight: 600;
+    }
+    .guided-progress {
+      display: flex;
+      gap: 4px;
+      margin-bottom: var(--space-xl);
+    }
+    .guided-progress .step {
+      width: 32px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--ec-gray-200);
+      transition: background 0.3s;
+    }
+    .guided-progress .step.complete {
+      background: var(--ec-accent);
+    }
+    .guided-progress .step.current {
+      background: var(--ec-blue);
+    }
+    .guided-nav {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+    }
+    .guided-nav button {
+      padding: 0.6rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--ec-gray-200);
+      background: var(--ec-white);
+      color: var(--ec-gray-600);
+      transition: all 0.2s;
+    }
+    .guided-nav button:hover {
+      border-color: var(--ec-blue);
+      color: var(--ec-blue);
+    }
+    .guided-nav button.next {
+      background: var(--ec-accent);
+      color: white;
+      border-color: var(--ec-accent);
+    }
+    .guided-nav button.next:hover {
+      background: var(--ec-accent-hover);
+    }
+
+    @media (max-width: 768px) {
+      .mode-selection {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <svg class="header-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#2c6faa"/>
+          <path d="M10 14h20M10 20h14M10 26h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="header-title">Edge Controls</div>
+          <div class="header-subtitle">Industrial Automation &amp; Control Systems</div>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">← Back to Portal</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Form -->
+  <div class="form-container">
+    <div style="margin-bottom: var(--space-lg);">
+      <a href="index.html" style="font-size: 0.9rem; color: var(--ec-gray-400);">← Back to request type selection</a>
+    </div>
+
+    <div class="form-card">
+      <h1 style="font-family: var(--font-heading); font-size: 1.6rem; font-weight: 700; color: var(--ec-navy); margin-bottom: var(--space-xs);">New Build Request</h1>
+      <p style="color: var(--ec-gray-600); margin-bottom: var(--space-2xl); font-size: 0.95rem;">Tell us about your new project. Choose how you'd like to provide your information:</p>
+
+      <!-- Mode Selection -->
+      <div class="mode-selection">
+        <div class="mode-card" onclick="selectMode('traditional')" id="mode-traditional">
+          <div class="mode-icon">📋</div>
+          <h3>Fill Out a Form</h3>
+          <p>Standard form — provide all project details at once. Best if you already know what you need.</p>
+        </div>
+        <div class="mode-card" onclick="selectMode('guided')" id="mode-guided">
+          <div class="mode-icon">💬</div>
+          <h3>Guided Walkthrough</h3>
+          <p>Answer one question at a time. We'll walk you through it step by step. Best if you're not sure where to start.</p>
+        </div>
+      </div>
+
+      <!-- ============ TRADITIONAL FORM ============ -->
+      <div id="traditional-form" style="display: none;">
+        
+        <!-- Contact Information -->
+        <div class="form-section-title">Your Information</div>
+
+        <div class="form-group">
+          <label for="company">Company Name *</label>
+          <select id="company" required>
+            <option value="">Select your company...</option>
+            <option value="__new__">+ My company isn't listed</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="new-company-group" style="display: none;">
+          <label for="new-company">Company Name *</label>
+          <input type="text" id="new-company" placeholder="Enter your company name">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-name">Contact Name *</label>
+            <input type="text" id="contact-name" required placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label for="contact-phone">Phone *</label>
+            <input type="tel" id="contact-phone" required placeholder="(432) 555-1234" oninput="formatPhone(this)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contact-email">Email *</label>
+          <input type="email" id="contact-email" required placeholder="you@company.com">
+        </div>
+
+        <!-- Project Details -->
+        <div class="form-section-title">Project Details</div>
+
+        <div class="form-group">
+          <label for="site-location">Site Location *</label>
+          <div class="hint">Existing site from our database, or describe the new location.</div>
+          <select id="site-location" required>
+            <option value="">Select a site...</option>
+            <option value="__new__">+ New location (not in database)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="new-location-group" style="display: none;">
+          <label for="new-location">Location Details *</label>
+          <div class="hint">Address, GPS coordinates, or description of where the project will be.</div>
+          <textarea id="new-location" placeholder="Example: New SWD facility on Highway 302, about 3 miles east of Kermit. GPS: 31.8457, -103.0812"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="project-description">Project Description *</label>
+          <div class="hint">What are you looking to have built? What's the goal of this project?</div>
+          <textarea id="project-description" required placeholder="Example: We need a new PLC control system for our saltwater disposal well. Currently running manual operations with relay logic. Want to automate the injection pump, monitor tank levels, and add remote SCADA access."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="system-type">System Type *</label>
+          <select id="system-type" required>
+            <option value="">What type of system do you need?</option>
+            <option value="plc">PLC Control System</option>
+            <option value="scada">SCADA / Remote Monitoring</option>
+            <option value="hmi">HMI / Operator Interface</option>
+            <option value="instrumentation">Instrumentation</option>
+            <option value="panel">Control Panel Fabrication</option>
+            <option value="retrofit">Retrofit / System Upgrade</option>
+            <option value="full-automation">Full Automation Package</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="equipment">Equipment Involved</label>
+          <div class="hint">What equipment will be controlled or monitored?</div>
+          <textarea id="equipment" placeholder="Example: 2 injection pumps (100HP VFD), 3 tank level transmitters, flow meter, pressure transmitters, chemical injection skid"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="existing-system">Existing Control System?</label>
+            <select id="existing-system">
+              <option value="">Select...</option>
+              <option value="plc">Yes — PLC based</option>
+              <option value="relay">Yes — Relay / manual</option>
+              <option value="none">No — Greenfield</option>
+              <option value="unknown">I don't know</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="timeline">Timeline Expectations</label>
+            <select id="timeline">
+              <option value="">Select...</option>
+              <option value="asap">ASAP</option>
+              <option value="1-month">Within 1 month</option>
+              <option value="1-3-months">1–3 months</option>
+              <option value="3-6-months">3–6 months</option>
+              <option value="6-plus">6+ months</option>
+              <option value="flexible">Flexible</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="budget">Budget Range (Optional)</label>
+          <select id="budget">
+            <option value="">Prefer not to say</option>
+            <option value="under-10k">Under $10,000</option>
+            <option value="10k-25k">$10,000 – $25,000</option>
+            <option value="25k-50k">$25,000 – $50,000</option>
+            <option value="50k-100k">$50,000 – $100,000</option>
+            <option value="100k-plus">$100,000+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="requirements">Special Requirements or Standards</label>
+          <div class="hint">Any specific requirements? (UL 508A, Class 1 Div 2, specific PLC brand, etc.)</div>
+          <textarea id="requirements" placeholder="Example: Must be UL 508A listed. Customer requires Allen-Bradley ControlLogix. Area classification: Class 1, Div 2."></textarea>
+        </div>
+
+        <!-- File Upload -->
+        <div class="form-section-title">Documents &amp; Photos (Optional)</div>
+
+        <div class="form-group">
+          <label for="file-upload">Upload Files</label>
+          <div class="hint">Drawings, P&IDs, specs, photos of existing equipment, site photos. Max 10MB per file.</div>
+          <input type="file" id="file-upload" multiple accept="image/*,.pdf,.doc,.docx,.xlsx,.xls,.csv,.txt,.dwg,.dxf">
+          <div id="file-list" style="margin-top: var(--space-sm); font-size: 0.85rem; color: var(--ec-gray-600);"></div>
+        </div>
+
+        <!-- Submit -->
+        <div id="form-status"></div>
+
+        <button type="button" class="btn btn-accent" id="submit-btn" onclick="handleTraditionalSubmit()" style="margin-top: var(--space-lg);">
+          Submit New Build Request
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- ============ GUIDED WALKTHROUGH ============ -->
+      <div id="guided-form" style="display: none;">
+        <div class="guided-container" id="guided-content">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Edge Controls. Industrial Automation &amp; Control Systems — Permian Basin, Texas.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ---- Mode Selection ----
+    function selectMode(mode) {
+      document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+      document.getElementById(`mode-${mode}`).classList.add('active');
+
+      document.getElementById('traditional-form').style.display = mode === 'traditional' ? 'block' : 'none';
+      document.getElementById('guided-form').style.display = mode === 'guided' ? 'block' : 'none';
+
+      if (mode === 'guided') {
+        startGuidedWalkthrough();
+      }
+    }
+
+    // ---- Traditional Form Logic ----
+    document.getElementById('company')?.addEventListener('change', function() {
+      document.getElementById('new-company-group').style.display = 
+        this.value === '__new__' ? 'block' : 'none';
+    });
+
+    document.getElementById('site-location')?.addEventListener('change', function() {
+      document.getElementById('new-location-group').style.display = 
+        this.value === '__new__' ? 'block' : 'none';
+    });
+
+    document.getElementById('file-upload')?.addEventListener('change', function() {
+      const list = document.getElementById('file-list');
+      if (this.files.length > 0) {
+        const names = Array.from(this.files).map(f => 
+          `📎 ${f.name} (${(f.size / 1024).toFixed(0)} KB)`
+        );
+        list.innerHTML = names.join('<br>');
+      } else {
+        list.innerHTML = '';
+      }
+    });
+
+    async function handleTraditionalSubmit() {
+      // TODO: Full validation and submission — same pattern as service form
+      const btn = document.getElementById('submit-btn');
+      setLoading(btn, true);
+
+      try {
+        // Gather all form data
+        const data = {
+          type: 'new-build',
+          mode: 'traditional',
+          company: document.getElementById('company').value,
+          contactName: document.getElementById('contact-name').value,
+          contactPhone: document.getElementById('contact-phone').value,
+          contactEmail: document.getElementById('contact-email').value,
+          siteLocation: document.getElementById('site-location').value,
+          projectDescription: document.getElementById('project-description').value,
+          systemType: document.getElementById('system-type').value,
+          equipment: document.getElementById('equipment').value,
+          existingSystem: document.getElementById('existing-system').value,
+          timeline: document.getElementById('timeline').value,
+          budget: document.getElementById('budget').value,
+          requirements: document.getElementById('requirements').value,
+          timestamp: new Date().toISOString()
+        };
+
+        const fileInput = document.getElementById('file-upload');
+        if (fileInput.files.length > 0) {
+          data.files = await prepareFiles(fileInput.files);
+        }
+
+        const result = await submitRequest(data);
+
+        if (result.success) {
+          document.querySelector('.form-card').innerHTML = `
+            <div style="text-align: center; padding: var(--space-2xl) 0;">
+              <div style="font-size: 3rem; margin-bottom: var(--space-md);">✓</div>
+              <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--ec-navy); margin-bottom: var(--space-md);">Request Submitted</h2>
+              <p style="color: var(--ec-gray-600); margin-bottom: var(--space-lg);">
+                Your new build request has been received. Our engineering team will review your project scope and follow up to discuss next steps.
+              </p>
+              <p style="color: var(--ec-gray-400); font-size: 0.9rem; margin-bottom: var(--space-xl);">
+                A confirmation email has been sent to <strong>${data.contactEmail}</strong>.
+              </p>
+              <a href="index.html" class="btn btn-accent" style="display: inline-flex; width: auto;">
+                Submit Another Request
+              </a>
+            </div>
+          `;
+        }
+      } catch (error) {
+        showStatus('form-status', 'Something went wrong. Please try again or call us directly.', 'error');
+        console.error(error);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+
+    // ---- Guided Walkthrough ----
+    // This is the TurboTax-style guided intake
+    // Question tree will be expanded over time
+
+    const GUIDED_QUESTIONS = [
+      {
+        id: 'project-type',
+        question: 'What best describes your project?',
+        options: [
+          { label: 'New control system', value: 'new-system' },
+          { label: 'Retrofit or upgrade existing system', value: 'retrofit' },
+          { label: 'Add instrumentation or monitoring', value: 'instrumentation' },
+          { label: 'SCADA / HMI / remote access', value: 'scada-hmi' },
+        ]
+      },
+      {
+        id: 'equipment-type',
+        question: 'What equipment will be controlled or monitored?',
+        options: [
+          { label: 'Pumps', value: 'pumps' },
+          { label: 'Compressors', value: 'compressors' },
+          { label: 'Valves', value: 'valves' },
+          { label: 'Tanks / vessels', value: 'tanks' },
+        ],
+        // TODO: Allow multi-select for this question
+      },
+      {
+        id: 'existing-system',
+        question: 'Is there an existing control system on site?',
+        options: [
+          { label: 'Yes — PLC based', value: 'plc' },
+          { label: 'Yes — relay or manual controls', value: 'relay' },
+          { label: 'No — nothing exists yet', value: 'none' },
+          { label: "I don't know", value: 'unknown' },
+        ]
+      },
+      {
+        id: 'driver',
+        question: "What's driving this project?",
+        options: [
+          { label: 'New installation / new site', value: 'new-install' },
+          { label: 'Equipment upgrade', value: 'upgrade' },
+          { label: 'Regulatory requirement', value: 'regulatory' },
+          { label: 'Efficiency improvement', value: 'efficiency' },
+        ]
+      },
+      {
+        id: 'timeline',
+        question: 'When do you need this completed?',
+        options: [
+          { label: 'As soon as possible', value: 'asap' },
+          { label: 'Within 1–3 months', value: '1-3-months' },
+          { label: '3–6 months', value: '3-6-months' },
+          { label: 'Flexible / planning phase', value: 'flexible' },
+        ]
+      },
+      // Contact info will be collected at the end
+      // File upload step will be added
+      // Summary/review step will be added
+    ];
+
+    let guidedState = {
+      currentStep: 0,
+      answers: {}
+    };
+
+    function startGuidedWalkthrough() {
+      guidedState = { currentStep: 0, answers: {} };
+      renderGuidedStep();
+    }
+
+    function renderGuidedStep() {
+      const container = document.getElementById('guided-content');
+      const step = GUIDED_QUESTIONS[guidedState.currentStep];
+
+      if (!step) {
+        // End of questions — show contact info collection
+        renderGuidedContactStep();
+        return;
+      }
+
+      const totalSteps = GUIDED_QUESTIONS.length + 2; // +2 for contact & review
+      const selectedValue = guidedState.answers[step.id];
+
+      container.innerHTML = `
+        <div class="guided-progress">
+          ${Array.from({length: totalSteps}, (_, i) => 
+            `<div class="step ${i < guidedState.currentStep ? 'complete' : ''} ${i === guidedState.currentStep ? 'current' : ''}"></div>`
+          ).join('')}
+        </div>
+        <div class="guided-question">${step.question}</div>
+        <div class="guided-options">
+          ${step.options.map(opt => `
+            <div class="guided-option ${selectedValue === opt.value ? 'selected' : ''}" 
+                 onclick="selectGuidedOption('${step.id}', '${opt.value}', this)">
+              ${opt.label}
+            </div>
+          `).join('')}
+        </div>
+        <div class="guided-nav">
+          ${guidedState.currentStep > 0 
+            ? '<button onclick="guidedBack()">← Back</button>' 
+            : ''}
+          <button class="next" onclick="guidedNext()" ${!selectedValue ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} id="guided-next-btn">
+            Next →
+          </button>
+        </div>
+      `;
+    }
+
+    function selectGuidedOption(questionId, value, element) {
+      guidedState.answers[questionId] = value;
+      document.querySelectorAll('.guided-option').forEach(o => o.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      const nextBtn = document.getElementById('guided-next-btn');
+      if (nextBtn) {
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = '1';
+        nextBtn.style.cursor = 'pointer';
+      }
+    }
+
+    function guidedNext() {
+      const step = GUIDED_QUESTIONS[guidedState.currentStep];
+      if (step && !guidedState.answers[step.id]) return;
+
+      guidedState.currentStep++;
+      renderGuidedStep();
+    }
+
+    function guidedBack() {
+      if (guidedState.currentStep > 0) {
+        guidedState.currentStep--;
+        renderGuidedStep();
+      }
+    }
+
+    function renderGuidedContactStep() {
+      const container = document.getElementById('guided-content');
+      const totalSteps = GUIDED_QUESTIONS.length + 2;
+
+      container.innerHTML = `
+        <div class="guided-progress">
+          ${Array.from({length: totalSteps}, (_, i) => 
+            `<div class="step ${i < guidedState.currentStep ? 'complete' : ''} ${i === guidedState.currentStep ? 'current' : ''}"></div>`
+          ).join('')}
+        </div>
+        <div class="guided-question">Almost done! How can we reach you?</div>
+        <div style="width: 100%; max-width: 450px; text-align: left;">
+          <div class="form-group">
+            <label for="g-company">Company Name *</label>
+            <input type="text" id="g-company" required placeholder="Your company name">
+          </div>
+          <div class="form-group">
+            <label for="g-name">Your Name *</label>
+            <input type="text" id="g-name" required placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label for="g-phone">Phone *</label>
+            <input type="tel" id="g-phone" required placeholder="(432) 555-1234" oninput="formatPhone(this)">
+          </div>
+          <div class="form-group">
+            <label for="g-email">Email *</label>
+            <input type="email" id="g-email" required placeholder="you@company.com">
+          </div>
+          <div class="form-group">
+            <label for="g-location">Project Location</label>
+            <input type="text" id="g-location" placeholder="Site name, address, or GPS coordinates">
+          </div>
+          <div class="form-group">
+            <label for="g-notes">Anything else we should know?</label>
+            <textarea id="g-notes" placeholder="Additional details, special requirements, etc."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="g-files">Upload Files (Optional)</label>
+            <input type="file" id="g-files" multiple accept="image/*,.pdf,.doc,.docx,.xlsx,.xls,.dwg,.dxf">
+          </div>
+        </div>
+        <div class="guided-nav">
+          <button onclick="guidedBack()">← Back</button>
+          <button class="next" onclick="submitGuided()">Submit Request →</button>
+        </div>
+      `;
+    }
+
+    async function submitGuided() {
+      // TODO: Validate contact fields and submit
+      const data = {
+        type: 'new-build',
+        mode: 'guided',
+        answers: guidedState.answers,
+        company: document.getElementById('g-company').value,
+        contactName: document.getElementById('g-name').value,
+        contactPhone: document.getElementById('g-phone').value,
+        contactEmail: document.getElementById('g-email').value,
+        location: document.getElementById('g-location').value,
+        notes: document.getElementById('g-notes').value,
+        timestamp: new Date().toISOString()
+      };
+
+      const result = await submitRequest(data);
+
+      if (result.success) {
+        document.querySelector('.form-card').innerHTML = `
+          <div style="text-align: center; padding: var(--space-2xl) 0;">
+            <div style="font-size: 3rem; margin-bottom: var(--space-md);">✓</div>
+            <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--ec-navy); margin-bottom: var(--space-md);">Request Submitted</h2>
+            <p style="color: var(--ec-gray-600); margin-bottom: var(--space-lg);">
+              Your new build request has been received. Our engineering team will review your project and follow up to discuss next steps.
+            </p>
+            <a href="index.html" class="btn btn-accent" style="display: inline-flex; width: auto;">
+              Submit Another Request
+            </a>
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
