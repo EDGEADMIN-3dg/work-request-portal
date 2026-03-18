@@ -159,9 +159,9 @@
     companySelect.addEventListener('change', function() {
       document.getElementById('new-company-group').style.display = 
         this.value === '__new__' ? 'block' : 'none';
-      
-      // TODO: Filter sites by selected company
-      // This will call the backend to get sites for the selected customer
+     
+      // Filter sites by selected company
+  populateSiteDropdown(this.value, siteSelect);
     });
 
     siteSelect.addEventListener('change', function() {
