@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Login — Edge Controls</title>
+  <meta name="description" content="Log in to view your Edge Controls project status and updates.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <a href="index.html">
+          <img src="https://edgecontrols.com/wp-content/uploads/2022/06/cropped-EdgeLogo512x512.png" alt="Edge Controls" class="header-logo">
+          <div>
+            <div class="header-title">Edge Controls</div>
+            <div class="header-subtitle">Industrial Automation &amp; Control Systems</div>
+          </div>
+        </a>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">← Back to Portal</a>
+        <a href="tel:+14323601023" class="header-phone">(432) 360-1023</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Login Form -->
+  <div class="login-container">
+    <div class="login-card">
+      <img src="https://edgecontrols.com/wp-content/uploads/2022/06/cropped-EdgeLogo512x512.png" alt="Edge Controls" class="header-logo">
+      <h1>Customer Portal</h1>
+      <p class="login-subtitle">Log in to view your project status and updates.</p>
+
+      <div class="form-group">
+        <label for="username">Company Name</label>
+        <input type="text" id="username" placeholder="Enter your company name">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Access Code</label>
+        <input type="password" id="password" placeholder="Enter your access code">
+      </div>
+
+      <div id="login-status"></div>
+
+      <button class="btn btn-primary" onclick="handleLogin()" style="margin-top: var(--space-md);">
+        Sign In
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+      </button>
+
+      <p style="margin-top: var(--space-xl); font-size: 0.8rem; color: var(--ec-gray-300);">
+        Don't have login credentials? Contact your Edge Controls project manager or call <a href="tel:+14323601023">(432) 360-1023</a>.
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Edge Controls LLC. Industrial Automation &amp; Control Systems — Permian Basin, Texas.</p>
+  </footer>
+
+  <script>
+    function handleLogin() {
+      var username = document.getElementById('username').value.trim();
+      var password = document.getElementById('password').value.trim();
+      var status = document.getElementById('login-status');
+
+      if (!username || !password) {
+        status.innerHTML = '<div class="status-message error">Please enter your company name and access code.</div>';
+        return;
+      }
+
+      // Placeholder — will connect to the project management backend later
+      status.innerHTML = '<div class="status-message" style="background: rgba(91,192,222,0.1); color: var(--ec-cyan); border: 1px solid rgba(91,192,222,0.2);">The customer portal is coming soon. Your project manager will notify you when access is available.</div>';
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+</body>
+</html>
