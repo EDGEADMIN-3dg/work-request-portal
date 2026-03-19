@@ -18,12 +18,12 @@
   --ec-steel: #1a2538;
   --ec-panel: #1e2a3e;
   --ec-panel-light: #243347;
-  --ec-cyan: #5bc0de;
-  --ec-cyan-hover: #46b8da;
+   --ec-cyan: #4a9bb5;
+  --ec-cyan-hover: #5aacca;
   --ec-cyan-glow: rgba(91, 192, 222, 0.15);
   --ec-cyan-subtle: rgba(91, 192, 222, 0.06);
-  --ec-orange: #e8762b;
-  --ec-orange-hover: #f5923e;
+  --ec-orange: #c4683a;
+  --ec-orange-hover: #d67a4a;
   --ec-orange-glow: rgba(232, 118, 43, 0.15);
   --ec-white: #ffffff;
   --ec-off-white: #e8ecf1;
