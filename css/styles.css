@@ -11,14 +11,20 @@
 }
 
 :root {
-  /* Brand Colors */
+  /* Brand Colors — matched to edgecontrols.com */
   --ec-navy: #0f1923;
   --ec-dark: #162030;
   --ec-steel: #1e3048;
   --ec-blue: #2c6faa;
   --ec-blue-light: #3d8fd4;
-  --ec-accent: #e8762b;
-  --ec-accent-hover: #f5923e;
+  --ec-cyan: #5bc0de;
+  --ec-cyan-hover: #46b8da;
+  --ec-cyan-light: rgba(91, 192, 222, 0.1);
+  --ec-accent: #5bc0de;
+  --ec-accent-hover: #46b8da;
+  --ec-accent-light: rgba(91, 192, 222, 0.1);
+  --ec-orange: #e8762b;
+  --ec-orange-hover: #f5923e;
   --ec-white: #ffffff;
   --ec-off-white: #f4f6f9;
   --ec-gray-100: #e8ecf1;
@@ -86,7 +92,7 @@ a:hover {
 .site-header {
   background: var(--ec-navy);
   color: var(--ec-white);
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--space-md) var(--space-xl);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -107,8 +113,20 @@ a:hover {
   gap: var(--space-md);
 }
 
+.header-brand a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  color: inherit;
+  text-decoration: none;
+}
+
+.header-brand a:hover {
+  color: inherit;
+}
+
 .header-logo {
-  height: 40px;
+  height: 48px;
   width: auto;
 }
 
@@ -129,6 +147,7 @@ a:hover {
 .header-nav {
   display: flex;
   gap: var(--space-lg);
+  align-items: center;
 }
 
 .header-nav a {
@@ -140,6 +159,11 @@ a:hover {
 
 .header-nav a:hover {
   color: var(--ec-white);
+}
+
+.header-phone {
+  color: var(--ec-cyan) !important;
+  font-weight: 600 !important;
 }
 
 /* --- Hero Section --- */
@@ -160,8 +184,8 @@ a:hover {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(ellipse at 20% 50%, rgba(44, 111, 170, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 50%, rgba(232, 118, 43, 0.08) 0%, transparent 60%);
+    radial-gradient(ellipse at 20% 50%, rgba(91, 192, 222, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(91, 192, 222, 0.06) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -239,11 +263,11 @@ a:hover {
 }
 
 .request-card.service::before {
-  background: var(--ec-blue);
+  background: var(--ec-cyan);
 }
 
 .request-card.new-build::before {
-  background: var(--ec-accent);
+  background: var(--ec-orange);
 }
 
 .card-icon {
@@ -257,13 +281,13 @@ a:hover {
 }
 
 .card-icon.service-icon {
-  background: rgba(44, 111, 170, 0.1);
-  color: var(--ec-blue);
+  background: var(--ec-cyan-light);
+  color: var(--ec-cyan);
 }
 
 .card-icon.new-build-icon {
   background: rgba(232, 118, 43, 0.1);
-  color: var(--ec-accent);
+  color: var(--ec-orange);
 }
 
 .card-icon svg {
@@ -309,11 +333,11 @@ a:hover {
 }
 
 .request-card.service .card-features li::before {
-  background: var(--ec-blue);
+  background: var(--ec-cyan);
 }
 
 .request-card.new-build .card-features li::before {
-  background: var(--ec-accent);
+  background: var(--ec-orange);
 }
 
 .btn {
@@ -333,22 +357,22 @@ a:hover {
 }
 
 .btn-primary {
-  background: var(--ec-blue);
+  background: var(--ec-cyan);
   color: var(--ec-white);
 }
 
 .btn-primary:hover {
-  background: var(--ec-blue-light);
+  background: var(--ec-cyan-hover);
   color: var(--ec-white);
 }
 
 .btn-accent {
-  background: var(--ec-accent);
+  background: var(--ec-orange);
   color: var(--ec-white);
 }
 
 .btn-accent:hover {
-  background: var(--ec-accent-hover);
+  background: var(--ec-orange-hover);
   color: var(--ec-white);
 }
 
@@ -488,8 +512,8 @@ a:hover {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--ec-blue);
-  box-shadow: 0 0 0 3px rgba(44, 111, 170, 0.12);
+  border-color: var(--ec-cyan);
+  box-shadow: 0 0 0 3px rgba(91, 192, 222, 0.15);
 }
 
 .form-group textarea {
@@ -506,8 +530,8 @@ a:hover {
 }
 
 .form-group input[type="file"]:hover {
-  border-color: var(--ec-blue);
-  background: rgba(44, 111, 170, 0.03);
+  border-color: var(--ec-cyan);
+  background: rgba(91, 192, 222, 0.03);
 }
 
 .form-row {
@@ -534,8 +558,8 @@ a:hover {
 }
 
 .urgency-option:hover {
-  border-color: var(--ec-blue);
-  background: rgba(44, 111, 170, 0.02);
+  border-color: var(--ec-cyan);
+  background: rgba(91, 192, 222, 0.03);
 }
 
 .urgency-option input[type="radio"] {
