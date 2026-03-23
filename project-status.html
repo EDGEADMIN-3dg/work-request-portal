@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Status — Edge Controls</title>
+  <meta name="description" content="View your Edge Controls project status, milestones, and progress.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Project Status Page Styles ──────────────── */
+    .status-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+    }
+
+    /* ── Project Header Card ────────────────────── */
+    .project-hero {
+      background: var(--ec-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--ec-gray-100);
+      margin-bottom: var(--space-xl);
+    }
+    .project-hero .customer-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ec-gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .project-hero .site-name {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ec-navy);
+      margin-bottom: var(--space-sm);
+    }
+    .project-hero .description {
+      font-size: 0.9rem;
+      color: var(--ec-gray-600);
+      line-height: 1.6;
+      margin-bottom: var(--space-lg);
+    }
+    .hero-meta {
+      display: flex;
+      gap: var(--space-xl);
+      flex-wrap: wrap;
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--ec-gray-100);
+    }
+    .hero-meta-item .hm-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--ec-gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hero-meta-item .hm-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ec-navy);
+      margin-top: 2px;
+    }
+
+    /* ── Health Badge ───────────────────────────── */
+    .health-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 20px;
+    }
+    .health-ontrack { background: #ecfdf5; color: #065f46; }
+    .health-atrisk { background: #fffbeb; color: #92400e; }
+    .health-behind { background: #fef2f2; color: #991b1b; }
+
+    /* ── Overall Progress ──────────────────────── */
+    .overall-progress {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+    .overall-track {
+      flex: 1;
+      height: 10px;
+      background: var(--ec-gray-100);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .overall-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: linear-gradient(90deg, var(--ec-blue), var(--ec-blue-light));
+      transition: width 0.6s ease;
+    }
+    .overall-pct {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ec-blue);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* ── Stage Progress Bars ───────────────────── */
+    .stages-card {
+      background: var(--ec-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--ec-gray-100);
+      margin-bottom: var(--space-xl);
+    }
+    .stages-card h3 {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--ec-gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-lg);
+    }
+    .stage-row {
+      margin-bottom: var(--space-md);
+    }
+    .stage-row:last-child { margin-bottom: 0; }
+    .stage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 6px 0;
+      user-select: none;
+    }
+    .stage-header:hover .stage-name { color: var(--ec-blue); }
+    .stage-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .stage-indicator {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .stage-indicator.complete {
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    .stage-indicator.current {
+      background: rgba(44, 111, 170, 0.12);
+      color: var(--ec-blue);
+      border: 2px solid var(--ec-blue);
+    }
+    .stage-indicator.future {
+      background: var(--ec-gray-100);
+      color: var(--ec-gray-400);
+    }
+    .stage-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ec-navy);
+      transition: color 0.15s;
+    }
+    .stage-name.complete { color: #065f46; }
+    .stage-name.future { color: var(--ec-gray-400); }
+    .stage-pct {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ec-gray-400);
+      min-width: 36px;
+      text-align: right;
+    }
+    .stage-pct.done { color: #065f46; }
+    .stage-bar-track {
+      height: 8px;
+      background: var(--ec-gray-100);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 6px 0 4px 30px;
+    }
+    .stage-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .stage-bar-fill.complete { background: linear-gradient(90deg, #10b981, #34d399); }
+    .stage-bar-fill.current { background: linear-gradient(90deg, var(--ec-blue), var(--ec-blue-light)); }
+    .stage-bar-fill.future { background: var(--ec-gray-200); }
+
+    /* ── Expandable Tasks ──────────────────────── */
+    .stage-tasks {
+      margin-left: 30px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .stage-tasks.open {
+      max-height: 500px;
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 5px 0;
+      font-size: 0.85rem;
+    }
+    .task-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    .task-check.done {
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    .task-check.pending {
+      background: var(--ec-off-white);
+      border: 1.5px solid var(--ec-gray-200);
+    }
+    .task-text { color: var(--ec-gray-600); }
+    .task-text.done { color: #065f46; }
+    .task-date {
+      font-size: 0.75rem;
+      color: var(--ec-gray-400);
+      margin-left: auto;
+    }
+    .expand-arrow {
+      font-size: 10px;
+      color: var(--ec-gray-400);
+      transition: transform 0.2s;
+      margin-left: 4px;
+    }
+    .expand-arrow.open { transform: rotate(90deg); }
+
+    /* ── Activity Section ──────────────────────── */
+    .activity-card {
+      background: var(--ec-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--ec-gray-100);
+    }
+    .activity-card h3 {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--ec-gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-md);
+    }
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--ec-gray-100);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ec-blue);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .activity-action {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ec-navy);
+    }
+    .activity-detail {
+      font-size: 0.8rem;
+      color: var(--ec-gray-600);
+      margin-top: 2px;
+    }
+    .activity-date {
+      font-size: 0.75rem;
+      color: var(--ec-gray-400);
+      margin-top: 2px;
+    }
+
+    /* ── Loading / Error / Empty ────────────────── */
+    .page-loading {
+      text-align: center;
+      padding: 80px var(--space-xl);
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--ec-gray-200);
+      border-top-color: var(--ec-blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto var(--space-md);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-text {
+      text-align: center;
+      color: var(--ec-gray-400);
+      font-size: 0.9rem;
+      padding: var(--space-lg) 0;
+    }
+
+    /* ── Multi-Project List ─────────────────────── */
+    .project-list {
+      max-width: 560px;
+      margin: var(--space-2xl) auto;
+      padding: 0 var(--space-xl);
+    }
+    .project-list h2 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ec-navy);
+      margin-bottom: var(--space-lg);
+    }
+    .pli {
+      background: var(--ec-white);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg) var(--space-xl);
+      margin-bottom: var(--space-sm);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--ec-gray-100);
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.1s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pli:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .pli-name { font-weight: 600; color: var(--ec-navy); }
+    .pli-stage { font-size: 0.8rem; color: var(--ec-gray-400); margin-top: 2px; }
+    .pli-pct { font-size: 1.2rem; font-weight: 700; color: var(--ec-blue); }
+
+    @media (max-width: 640px) {
+      .status-container { padding: var(--space-lg) var(--space-md) var(--space-2xl); }
+      .project-hero { padding: var(--space-lg); }
+      .project-hero .site-name { font-size: 1.3rem; }
+      .hero-meta { gap: var(--space-md); }
+      .stages-card, .activity-card { padding: var(--space-lg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <svg class="header-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#2c6faa"/>
+          <path d="M10 14h20M10 20h14M10 26h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="header-title">Edge Controls</div>
+          <div class="header-subtitle">Industrial Automation &amp; Control Systems</div>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="tel:+14323601023">(432) 360-1023</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Loading View -->
+  <div id="loadingView">
+    <div class="page-loading">
+      <div class="spinner"></div>
+      <div style="color: var(--ec-gray-400);">Loading project status...</div>
+    </div>
+  </div>
+
+  <!-- Login View (shown when no key and not authenticated) -->
+  <div id="loginView" style="display:none;">
+    <div class="form-container">
+      <div class="form-card" style="max-width:420px;margin:var(--space-2xl) auto;">
+        <h1 style="font-family:var(--font-heading);font-size:1.4rem;font-weight:700;color:var(--ec-navy);margin-bottom:var(--space-xs);">Project Status</h1>
+        <p style="color:var(--ec-gray-600);margin-bottom:var(--space-xl);font-size:0.9rem;">Enter your credentials to view your project status.</p>
+        <div id="loginError" style="display:none;background:#fef2f2;color:#991b1b;padding:10px 14px;border-radius:var(--radius-sm);font-size:0.85rem;margin-bottom:var(--space-md);border:1px solid #fecaca;"></div>
+        <div class="form-group">
+          <label for="loginUser">Company Name</label>
+          <input type="text" id="loginUser" placeholder="Enter your company name" autocomplete="organization">
+        </div>
+        <div class="form-group">
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" placeholder="Enter your access password" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary" id="loginBtn" onclick="doLogin()" style="width:100%;margin-top:var(--space-sm);justify-content:center;">
+          View Project Status
+        </button>
+        <p style="text-align:center;margin-top:var(--space-lg);font-size:0.8rem;color:var(--ec-gray-400);">
+          Don't have credentials? Contact your Edge Controls project manager or call <a href="tel:+14323601023">(432) 360-1023</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project List (multiple projects) -->
+  <div id="listView" style="display:none;">
+    <div class="project-list">
+      <h2>Your Projects</h2>
+      <div id="projectListItems"></div>
+    </div>
+  </div>
+
+  <!-- Project Status View -->
+  <div id="statusView" style="display:none;">
+    <div class="status-container">
+
+      <!-- Hero -->
+      <div class="project-hero">
+        <div class="customer-label" id="pvCustomer"></div>
+        <div class="site-name" id="pvSite"></div>
+        <div class="description" id="pvDesc"></div>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><div class="hm-label">Status</div><div class="hm-value" id="pvHealth"></div></div>
+          <div class="hero-meta-item"><div class="hm-label">Current Phase</div><div class="hm-value" id="pvStage"></div></div>
+          <div class="hero-meta-item"><div class="hm-label">Target Completion</div><div class="hm-value" id="pvTarget"></div></div>
+        </div>
+        <div class="overall-progress">
+          <div class="overall-track"><div class="overall-fill" id="pvBar"></div></div>
+          <div class="overall-pct" id="pvPct"></div>
+        </div>
+      </div>
+
+      <!-- Stage Progress Bars -->
+      <div class="stages-card">
+        <h3>Project Phases</h3>
+        <div id="pvStages"><div class="empty-text">Loading phases...</div></div>
+      </div>
+
+      <!-- Activity -->
+      <div class="activity-card">
+        <h3>Recent Activity</h3>
+        <div id="pvActivity"><div class="empty-text">Loading activity...</div></div>
+      </div>
+
+      <!-- Back link for multi-project -->
+      <div id="backLink" style="display:none;text-align:center;margin-top:var(--space-xl);">
+        <a href="javascript:void(0)" onclick="showList()" style="font-size:0.9rem;">&larr; Back to all projects</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error View -->
+  <div id="errorView" style="display:none;">
+    <div class="form-container">
+      <div class="form-card" style="max-width:420px;margin:var(--space-2xl) auto;text-align:center;">
+        <h2 style="font-family:var(--font-heading);color:#991b1b;margin-bottom:var(--space-md);">Access Denied</h2>
+        <p id="errorMsg" style="color:var(--ec-gray-600);margin-bottom:var(--space-xl);">Invalid or expired access link.</p>
+        <button class="btn btn-primary" onclick="showView('loginView')" style="width:auto;display:inline-flex;">Go to Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Edge Controls | I.C. Industrial Automation &amp; Control Systems — Permian Basin, Texas.</p>
+  </footer>
+
+  <script>
+    // ── Configuration ──────────────────────────────
+    // UPDATE THIS after creating the "Anyone" deployment
+    var API_BASE = 'https://script.google.com/macros/s/AKfycbzfOXrmTbOVQkK9XOhV-3ohuO_LlS5bHDI3Tm5ZqbGNBnrdxHJYoZJa2xfBEcu8uWYi/exec';
+
+
+    var STAGES = ['Prospect','On Deck','Engineering','Scheduled','In Progress','Testing','Complete'];
+    var projects = [];
+    var openStages = {};  // track which stages are expanded
+
+    // ── Init ───────────────────────────────────────
+    function init() {
+      // Enter key handlers
+      var passEl = document.getElementById('loginPass');
+      var userEl = document.getElementById('loginUser');
+      if (passEl) passEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
+      if (userEl) userEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('loginPass').focus(); });
+
+      // Check URL for key parameter
+      var params = new URLSearchParams(window.location.search);
+      var key = params.get('key');
+
+      if (key) {
+        showView('loadingView');
+        apiCall('portalAuthKey', { key: key }, function(r) {
+          if (r.success && r.project) {
+            projects = [r.project];
+            showProject(r.project);
+          } else {
+            showError(r.error || 'Invalid access link.');
+          }
+        });
+      } else {
+        showView('loginView');
+      }
+    }
+
+    // ── View Management ────────────────────────────
+    function showView(id) {
+      ['loadingView','loginView','listView','statusView','errorView'].forEach(function(v) {
+        document.getElementById(v).style.display = v === id ? '' : 'none';
+      });
+    }
+
+    function showError(msg) {
+      document.getElementById('errorMsg').textContent = msg;
+      showView('errorView');
+    }
+
+    // ── Login ──────────────────────────────────────
+    function doLogin() {
+      var u = document.getElementById('loginUser').value.trim();
+      var p = document.getElementById('loginPass').value.trim();
+      var errEl = document.getElementById('loginError');
+
+      if (!u || !p) {
+        errEl.textContent = 'Please enter both company name and password.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      errEl.style.display = 'none';
+      var btn = document.getElementById('loginBtn');
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+
+      apiCall('portalAuthLogin', { u: u, p: p }, function(r) {
+        btn.disabled = false;
+        btn.innerHTML = 'View Project Status';
+
+        if (r.success && r.projects && r.projects.length > 0) {
+          projects = r.projects;
+          if (projects.length === 1) {
+            showProject(projects[0]);
+          } else {
+            showList();
+          }
+        } else {
+          errEl.textContent = r.error || 'Invalid credentials.';
+          errEl.style.display = 'block';
+        }
+      }, function() {
+        btn.disabled = false;
+        btn.innerHTML = 'View Project Status';
+        errEl.textContent = 'Connection error. Please try again.';
+        errEl.style.display = 'block';
+      });
+    }
+
+    // ── Project List ───────────────────────────────
+    function showList() {
+      var c = document.getElementById('projectListItems');
+      c.innerHTML = projects.map(function(p, i) {
+        return '<div class="pli" onclick="selectProject(' + i + ')">' +
+          '<div><div class="pli-name">' + esc(p.site) + '</div>' +
+          '<div class="pli-stage">' + esc(p.stage) + '</div></div>' +
+          '<div class="pli-pct">' + p.completion + '%</div></div>';
+      }).join('');
+      showView('listView');
+    }
+
+    function selectProject(i) {
+      if (projects[i]) showProject(projects[i]);
+    }
+
+    // ── Project Detail ─────────────────────────────
+    function showProject(project) {
+      showView('statusView');
+      openStages = {};
+
+      // Back button for multi-project
+      document.getElementById('backLink').style.display = projects.length > 1 ? '' : 'none';
+
+      // Hero
+      document.getElementById('pvCustomer').textContent = project.customer;
+      document.getElementById('pvSite').textContent = project.site;
+      var descEl = document.getElementById('pvDesc');
+      descEl.textContent = project.description || '';
+      descEl.style.display = project.description ? '' : 'none';
+
+      // Health
+      var hEl = document.getElementById('pvHealth');
+      var hSlug = (project.health || 'On Track').toLowerCase().replace(/\s/g, '');
+      hEl.innerHTML = '<span class="health-badge health-' + hSlug + '">' + esc(project.health || 'On Track') + '</span>';
+
+      // Stage & target
+      document.getElementById('pvStage').textContent = project.stage || 'Prospect';
+      var td = project.targetDate;
+      if (td) { try { td = new Date(td).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); } catch(e) {} }
+      document.getElementById('pvTarget').textContent = td || 'To be determined';
+
+      // Overall progress
+      var pct = project.completion || 0;
+      document.getElementById('pvBar').style.width = pct + '%';
+      document.getElementById('pvPct').textContent = pct + '%';
+
+      // Load milestones & activity
+      loadMilestones(project.projectId);
+      loadActivity(project.projectId);
+    }
+
+    // ── Milestones → Stage Progress Bars ───────────
+    function loadMilestones(projectId) {
+      apiCall('portalMilestones', { id: projectId }, function(r) {
+        if (r.success) renderStages(r.milestones);
+        else document.getElementById('pvStages').innerHTML = '<div class="empty-text">Unable to load phases.</div>';
+      });
+    }
+
+    function renderStages(milestones) {
+      var el = document.getElementById('pvStages');
+      if (!milestones || !milestones.length) {
+        el.innerHTML = '<div class="empty-text">Phases will appear as the project progresses.</div>';
+        return;
+      }
+
+      // Build a map of milestone data by stage name
+      var mMap = {};
+      milestones.forEach(function(m) { mMap[m.stage] = m; });
+
+      // Find current stage index from the project
+      var currentStage = document.getElementById('pvStage').textContent;
+      var currentIdx = STAGES.indexOf(currentStage);
+      if (currentIdx < 0) currentIdx = 0;
+
+      el.innerHTML = STAGES.map(function(stageName, idx) {
+        var m = mMap[stageName];
+        var progress = m ? m.progress : 0;
+        var isComplete = m ? m.complete : false;
+        var isCurrent = idx === currentIdx;
+        var isFuture = idx > currentIdx;
+
+        // Indicator class
+        var indClass = isComplete ? 'complete' : (isCurrent ? 'current' : 'future');
+        var indContent = isComplete ? '&#10003;' : (isCurrent ? '&#9679;' : '');
+        var nameClass = isComplete ? ' complete' : (isFuture ? ' future' : '');
+        var barClass = isComplete ? 'complete' : (isCurrent ? 'current' : 'future');
+        var pctClass = isComplete ? ' done' : '';
+        var pctText = isComplete ? '100%' : (progress > 0 ? progress + '%' : '0%');
+
+        // Tasks HTML
+        var tasksHtml = '';
+        if (m && m.tasks && m.tasks.length) {
+          tasksHtml = m.tasks.map(function(t) {
+            var checkClass = t.complete ? 'done' : 'pending';
+            var checkContent = t.complete ? '&#10003;' : '';
+            var textClass = t.complete ? ' done' : '';
+            var dateStr = '';
+            if (t.date && t.complete) {
+              try { dateStr = new Date(t.date).toLocaleDateString(); } catch(e) {}
+            }
+            return '<div class="task-item">' +
+              '<div class="task-check ' + checkClass + '">' + checkContent + '</div>' +
+              '<span class="task-text' + textClass + '">' + esc(t.name) + '</span>' +
+              (dateStr ? '<span class="task-date">' + dateStr + '</span>' : '') +
+              '</div>';
+          }).join('');
+        }
+
+        return '<div class="stage-row">' +
+          '<div class="stage-header" onclick="toggleStage(\'' + stageName + '\')">' +
+          '<div class="stage-left">' +
+          '<div class="stage-indicator ' + indClass + '">' + indContent + '</div>' +
+          '<span class="stage-name' + nameClass + '">' + stageName + '</span>' +
+          (tasksHtml ? '<span class="expand-arrow' + (openStages[stageName] ? ' open' : '') + '" id="arrow-' + idx + '">&#9654;</span>' : '') +
+          '</div>' +
+          '<span class="stage-pct' + pctClass + '">' + pctText + '</span>' +
+          '</div>' +
+          '<div class="stage-bar-track"><div class="stage-bar-fill ' + barClass + '" style="width:' + (isComplete ? 100 : progress) + '%"></div></div>' +
+          (tasksHtml ? '<div class="stage-tasks' + (openStages[stageName] ? ' open' : '') + '" id="tasks-' + idx + '">' + tasksHtml + '</div>' : '') +
+          '</div>';
+      }).join('');
+    }
+
+    function toggleStage(stageName) {
+      var idx = STAGES.indexOf(stageName);
+      var tasksEl = document.getElementById('tasks-' + idx);
+      var arrowEl = document.getElementById('arrow-' + idx);
+      if (!tasksEl) return;
+
+      openStages[stageName] = !openStages[stageName];
+      tasksEl.classList.toggle('open');
+      if (arrowEl) arrowEl.classList.toggle('open');
+    }
+
+    // ── Activity ───────────────────────────────────
+    function loadActivity(projectId) {
+      apiCall('portalActivity', { id: projectId }, function(r) {
+        if (r.success) renderActivity(r.activity);
+        else document.getElementById('pvActivity').innerHTML = '<div class="empty-text">Unable to load activity.</div>';
+      });
+    }
+
+    function renderActivity(items) {
+      var el = document.getElementById('pvActivity');
+      if (!items || !items.length) {
+        el.innerHTML = '<div class="empty-text">Activity will appear as the project progresses.</div>';
+        return;
+      }
+      el.innerHTML = items.map(function(a) {
+        var dateStr = '';
+        if (a.date) { try { dateStr = new Date(a.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch(e) {} }
+        return '<div class="activity-item">' +
+          '<div class="activity-dot"></div><div>' +
+          '<div class="activity-action">' + esc(a.action) + '</div>' +
+          (a.detail ? '<div class="activity-detail">' + esc(a.detail) + '</div>' : '') +
+          (dateStr ? '<div class="activity-date">' + dateStr + '</div>' : '') +
+          '</div></div>';
+      }).join('');
+    }
+
+    // ── API Helper ─────────────────────────────────
+    function apiCall(action, params, onSuccess, onError) {
+      var url = API_BASE + '?action=' + action;
+      for (var key in params) {
+        if (params[key]) url += '&' + key + '=' + encodeURIComponent(params[key]);
+      }
+
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) { if (onSuccess) onSuccess(data); })
+        .catch(function(err) {
+          console.error('API error:', err);
+          if (onError) onError(err);
+        });
+    }
+
+    // ── Helpers ────────────────────────────────────
+    function esc(s) {
+      if (!s) return '';
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    // ── Boot ───────────────────────────────────────
+    try { init(); } catch(e) {
+      document.body.innerHTML = '<div style="text-align:center;padding:60px;color:#991b1b;">Something went wrong. Please refresh the page.</div>';
+    }
+  </script>
+</body>
+</html>
