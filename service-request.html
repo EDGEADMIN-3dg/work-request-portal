@@ -12,12 +12,8 @@
 </head>
 <body>
 
-//HEADER FOR service-request.html AND new-build.html
-//==================================================
-
-//Replace the entire <header>...</header> block in BOTH files with this:
-
-<header class="site-header">
+  <!-- Header -->
+  <header class="site-header">
     <div class="header-inner">
       <div class="header-brand">
         <a href="index.html">
@@ -161,15 +157,15 @@
     const siteSelect = document.getElementById('site');
 
     companySelect.addEventListener('change', function() {
-      document.getElementById('new-company-group').style.display = 
+      document.getElementById('new-company-group').style.display =
         this.value === '__new__' ? 'block' : 'none';
-     
+
       // Filter sites by selected company
-  populateSiteDropdown(this.value, siteSelect);
+      populateSiteDropdown(this.value, siteSelect);
     });
 
     siteSelect.addEventListener('change', function() {
-      document.getElementById('new-site-group').style.display = 
+      document.getElementById('new-site-group').style.display =
         this.value === '__new__' ? 'block' : 'none';
     });
 
@@ -177,7 +173,7 @@
     document.getElementById('file-upload').addEventListener('change', function() {
       const list = document.getElementById('file-list');
       if (this.files.length > 0) {
-        const names = Array.from(this.files).map(f => 
+        const names = Array.from(this.files).map(f =>
           `📎 ${f.name} (${(f.size / 1024).toFixed(0)} KB)`
         );
         list.innerHTML = names.join('<br>');
@@ -208,14 +204,14 @@
 
         const data = {
           type: 'service',
-          company: companyValue === '__new__' 
-            ? document.getElementById('new-company').value 
+          company: companyValue === '__new__'
+            ? document.getElementById('new-company').value
             : companyValue,
           contactName: document.getElementById('contact-name').value,
           contactPhone: document.getElementById('contact-phone').value,
           contactEmail: document.getElementById('contact-email').value,
-          site: siteValue === '__new__' 
-            ? document.getElementById('new-site').value 
+          site: siteValue === '__new__'
+            ? document.getElementById('new-site').value
             : siteValue,
           description: document.getElementById('description').value,
           urgency: urgency.value,
@@ -261,9 +257,7 @@
     }
 
     // ---- Load customers/sites from backend ----
-    // TODO: On page load, fetch customer list and site list from Apps Script
-    // For now, these are placeholder dropdowns
-    // loadCustomers() and loadSites() will be implemented when backend is ready
+    // Customer and site dropdowns are populated by main.js via loadCustomersAndSites()
   </script>
 </body>
 </html>
