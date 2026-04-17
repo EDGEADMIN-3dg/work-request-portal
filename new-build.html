@@ -366,13 +366,15 @@
     }
 
     // ---- Traditional Form Logic ----
+    // v2 FIX: removed stray extra '});' that was breaking the entire page's
+    // JavaScript. The syntax error silently bailed the <script> block,
+    // which is why selectMode() and submit buttons did nothing when clicked.
     document.getElementById('company')?.addEventListener('change', function() {
-       document.getElementById('new-company-group').style.display = 
+      document.getElementById('new-company-group').style.display =
         this.value === '__new__' ? 'block' : 'none';
-        // Filter sites by selected company
-        var siteSelect = document.getElementById('site-location');
-        populateSiteDropdown(this.value, siteSelect);
-});
+      // Filter sites by selected company
+      var siteSelect = document.getElementById('site-location');
+      populateSiteDropdown(this.value, siteSelect);
     });
 
     document.getElementById('site-location')?.addEventListener('change', function() {
